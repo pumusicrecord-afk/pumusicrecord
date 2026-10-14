@@ -686,38 +686,44 @@
         let synthInterval = null;
 
         const tracks = [
-            { title: "Bom Shake.mp3", artist: "Pujang Ujg", genre: "EDM", notes: [261.63, 329.63, 392.00, 523.25] },
-            { title: "Summer Nights.mp3", artist: "Pujang Ujg", genre: "EDM", notes: [220.00, 277.18, 329.63, 440.00] },
-            { title: "Joget Enak LAGU TIMUR JOGET Pujang Ujg.mp3", artist: "Pujang Ujg", genre: "EDM", notes: [174.61, 220.00, 261.63, 329.63] },
+        { title: "Bom Shake", artist: "Pujang Ujg", genre: "EDM", file: "Bom Shake.mp3" },
+        // Tambahkan lagu lainnya jika ada
         ];
+
+        // Deklarasikan objek audio global
+        const audioPlayer = new Audio();
+
+        function playTrack(index) {
+        currentTrackIndex = index;
+        const t = tracks[index];
+
+        // Menampilkan judul dan artis pada bar pemutar
+        document.getElementById('playerTitle').innerText = t.title + " - " + t.artist;
+        document.getElementById('playerArtist').innerText = `Genre: ${t.genre}`;
+
+        // Memutar file MP3 asli
+        audioPlayer.src = t.file;
+        audioPlayer.play();
+
+        isPlaying = true;
+        document.getElementById('mainPlayIcon').className = 'fa-solid fa-pause ml-0.5 text-sm';
+}
+
+function toggleAudioPreview() {
+  if (isPlaying) {
+    audioPlayer.pause();
+    isPlaying = false;
+    document.getElementById('mainPlayIcon').className = 'fa-solid fa-play ml-0.5 text-sm';
+  } else {
+    audioPlayer.play();
+    isPlaying = true;
+    document.getElementById('mainPlayIcon').className = 'fa-solid fa-pause ml-0.5 text-sm';
+  }
+}
 
         function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-        }
-
-        function playSynthTone(freq) {
-            if (!audioCtx || audioCtx.state === 'suspended') {
-                audioCtx && audioCtx.resume();
-            }
-            try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                
-                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
-
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.5);
-            } catch(e) {
-                console.log("Audio exception", e);
             }
         }
 
@@ -728,22 +734,6 @@
             } else {
                 startAudioPreview();
             }
-        }
-
-        function startAudioPreview() {
-            isPlaying = true;
-            document.getElementById('mainPlayIcon').className = 'fa-solid fa-pause ml-0.5 text-sm';
-            
-            const bars = document.querySelectorAll('#eqBars span');
-            bars.forEach(b => b.classList.add('animate-bar'));
-
-            let noteIdx = 0;
-            const currentNotes = tracks[currentTrackIndex].notes;
-
-            synthInterval = setInterval(() => {
-                playSynthTone(currentNotes[noteIdx % currentNotes.length]);
-                noteIdx++;
-            }, 320);
         }
 
         function stopAudioPreview() {
