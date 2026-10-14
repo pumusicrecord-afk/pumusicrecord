@@ -690,23 +690,23 @@
         // Tambahkan lagu lainnya jika ada
         ];
 
-        // Deklarasikan objek audio global
-        const audioPlayer = new Audio();
+// Deklarasikan objek audio global
+const audioPlayer = new Audio();
 
-        function playTrack(index) {
-        currentTrackIndex = index;
-        const t = tracks[index];
+function playTrack(index) {
+  currentTrackIndex = index;
+  const t = tracks[index];
 
-        // Menampilkan judul dan artis pada bar pemutar
-        document.getElementById('playerTitle').innerText = t.title + " - " + t.artist;
-        document.getElementById('playerArtist').innerText = `Genre: ${t.genre}`;
+  // Menampilkan judul dan artis pada bar pemutar
+  document.getElementById('playerTitle').innerText = t.title + " - " + t.artist;
+  document.getElementById('playerArtist').innerText = `Genre: ${t.genre}`;
 
-        // Memutar file MP3 asli
-        audioPlayer.src = t.file;
-        audioPlayer.play();
+  // Memutar file MP3 asli
+  audioPlayer.src = t.file;
+  audioPlayer.play();
 
-        isPlaying = true;
-        document.getElementById('mainPlayIcon').className = 'fa-solid fa-pause ml-0.5 text-sm';
+  isPlaying = true;
+  document.getElementById('mainPlayIcon').className = 'fa-solid fa-pause ml-0.5 text-sm';
 }
 
 function toggleAudioPreview() {
@@ -720,98 +720,6 @@ function toggleAudioPreview() {
     document.getElementById('mainPlayIcon').className = 'fa-solid fa-pause ml-0.5 text-sm';
   }
 }
-
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-        }
-
-        function toggleAudioPreview() {
-            initAudio();
-            if (isPlaying) {
-                stopAudioPreview();
-            } else {
-                startAudioPreview();
-            }
-        }
-
-        function stopAudioPreview() {
-            isPlaying = false;
-            document.getElementById('mainPlayIcon').className = 'fa-solid fa-play ml-0.5 text-sm';
-            if (synthInterval) clearInterval(synthInterval);
-            
-            const bars = document.querySelectorAll('#eqBars span');
-            bars.forEach(b => b.classList.remove('animate-bar'));
-        }
-
-        function playTrack(index) {
-            currentTrackIndex = index;
-            const t = tracks[index];
-            document.getElementById('playerTitle').innerText = t.title + " - " + t.artist;
-            document.getElementById('playerArtist').innerText = `Genre: ${t.genre}`;
-            
-            if (isPlaying) {
-                stopAudioPreview();
-            }
-            startAudioPreview();
-        }
-
-        function playNextTrack() {
-            currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-            playTrack(currentTrackIndex);
-        }
-
-        function playPrevTrack() {
-            currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-            playTrack(currentTrackIndex);
-        }
-
-        // 4. Background Canvas Visualizer
-        const canvas = document.getElementById('heroCanvas');
-        const ctx = canvas.getContext('2d');
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        let particles = [];
-        for (let i = 0; i < 35; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: Math.random() * 2 + 1,
-                vx: (Math.random() - 0.5) * 0.6,
-                vy: (Math.random() - 0.5) * 0.6,
-                color: ['#C5CAFD', '#3B62FF', '#4D73FF'][Math.floor(Math.random() * 3)]
-            });
-        }
-
-        function animateCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            particles.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-
-                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
-                ctx.fill();
-            });
-
-            requestAnimationFrame(animateCanvas);
-        }
-        
-        window.onload = function() {
-            animateCanvas();
-        };
     </script>
 </body>
 </html>
